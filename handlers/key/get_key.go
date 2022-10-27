@@ -39,7 +39,5 @@ func (h *KeyHandler) handleRead(ctx context.Context, req *logical.Request, data 
 		Data: key,
 	}
 
-	// h.logger.Debug("Handle Update", "data", data, "\nreq", req)
-
 	return resp, nil
 }

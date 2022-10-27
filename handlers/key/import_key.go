@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 	keyPair "github.com/hnamzian/hedera-vault-plugin/core/key"
-	"github.com/hnamzian/hedera-vault-plugin/entities"
+	keyEntity "github.com/hnamzian/hedera-vault-plugin/entities/key"
 	"github.com/hnamzian/hedera-vault-plugin/storage"
 )
 
@@ -33,7 +33,7 @@ func (h *KeyHandler) handleImport(ctx context.Context, req *logical.Request, dat
 
 	fmt.Printf("%s%s%s%s", path, id, priv, algo)
 
-	keybuf, err := entities.FromKeyPair(id, keypair).ToBytes()
+	keybuf, err := keyEntity.FromKeyPair(id, keypair).ToBytes()
 	if err != nil {
 		return nil, errwrap.Wrapf("json encoding failed: {{err}}", err)
 	}

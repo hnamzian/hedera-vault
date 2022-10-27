@@ -9,7 +9,6 @@ import (
 )
 
 type KeyHandler struct {
-	// logger *log.Logger
 }
 
 func NewKeyHandler() *KeyHandler {

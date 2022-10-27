@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/vault/sdk/framework"
 
 	"github.com/hashicorp/vault/sdk/logical"
-	"github.com/hnamzian/hedera-vault-plugin/handlers"
+	keyHandler "github.com/hnamzian/hedera-vault-plugin/handlers/key"
 )
 
 // backend wraps the backend framework and adds a map for storing key value pairs
@@ -39,13 +39,13 @@ func Factory(ctx context.Context, conf *logical.BackendConfig) (logical.Backend,
 func newBackend() (*backend, error) {
 	b := &backend{}
 
-	h := handlers.NewHandler()
+	kh := keyHandler.NewKeyHandler()
 
 	b.Backend = &framework.Backend{
 		Help:        strings.TrimSpace(mockHelp),
 		BackendType: logical.TypeLogical,
 		Paths: framework.PathAppend(
-			h.Key.Paths(),
+			kh.Paths(),
 		),
 	}
 

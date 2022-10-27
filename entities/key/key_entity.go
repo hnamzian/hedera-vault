@@ -1,4 +1,4 @@
-package entities
+package key_entity
 
 import (
 	"encoding/json"
