@@ -8,14 +8,14 @@ import (
 )
 
 type Storage struct {
-	req  *logical.Request
+	storage  logical.Storage
 	ctx context.Context
 	key string
 	val []byte
 }
 
 func NewStorage(req *logical.Request) *Storage {
-	return &Storage{req: req}
+	return &Storage{storage: req.Storage}
 }
 
 func (s *Storage) WithContext(ctx context.Context) *Storage {
@@ -40,14 +40,14 @@ func (s *Storage) Write() error {
 		Value:    s.val,
 		SealWrap: false,
 	}
-	if err := s.req.Storage.Put(s.ctx, entry); err != nil {
+	if err := s.storage.Put(s.ctx, entry); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (s *Storage) Read() ([]byte, error) {
-	entry, err := s.req.Storage.Get(s.ctx, s.key)
+	entry, err := s.storage.Get(s.ctx, s.key)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (s *Storage) Read() ([]byte, error) {
 }
 
 func (s *Storage) List() ([]string, error) {
-	entries, err := s.req.Storage.List(s.ctx, s.key)
+	entries, err := s.storage.List(s.ctx, s.key)
 	if err != nil {
 		return nil, err
 	}
@@ -64,5 +64,5 @@ func (s *Storage) List() ([]string, error) {
 }
 
 func (s *Storage) Delete() error {
-	return s.req.Storage.Delete(s.ctx, s.key)
+	return s.storage.Delete(s.ctx, s.key)
 }
