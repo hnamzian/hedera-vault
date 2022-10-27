@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	ALGORITHM_ED25519 = "ED25519"
-	ALGORITHM_ECDSA = "ECDSA"
+	ALGORITHM_ED25519     = "ED25519"
+	ALGORITHM_ECDSA       = "ECDSA"
 	CURVE_ECDSA_SECP256K1 = "secp256k1"
 )
 
@@ -24,7 +24,7 @@ func NewKeyPair(pub hedera.PublicKey, priv hedera.PrivateKey, algo, curve string
 		PublicKey:  pub,
 		PrivateKey: priv,
 		Algorithm:  algo,
-		Curve: curve,
+		Curve:      curve,
 	}
 }
 
@@ -46,5 +46,22 @@ func CreateKey(algo, curve string) (*KeyPair, error) {
 
 	pub := prv.PublicKey()
 	return NewKeyPair(pub, prv, algo, curve), nil
-	
+}
+
+func FromPrivateKey(s string, algo string) (*KeyPair, error) {
+	var curve string
+	var priv hedera.PrivateKey
+	var err error
+
+	if algo == ALGORITHM_ECDSA {
+		curve = CURVE_ECDSA_SECP256K1
+		priv, err = hedera.PrivateKeyFromStringECSDA(s)
+	} else {
+		algo = ALGORITHM_ED25519
+		priv, err = hedera.PrivateKeyFromStringEd25519(s)
+	}
+
+	pub := priv.PublicKey()
+
+	return NewKeyPair(pub, priv, algo, curve), err
 }

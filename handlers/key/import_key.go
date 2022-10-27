@@ -7,14 +7,12 @@ import (
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
-	"github.com/hnamzian/hedera-vault-plugin/core/key"
+	keyPair "github.com/hnamzian/hedera-vault-plugin/core/key"
 	"github.com/hnamzian/hedera-vault-plugin/entities"
 	"github.com/hnamzian/hedera-vault-plugin/storage"
 )
 
-
-func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
-
+func (h *KeyHandler) handleImport(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
 	if req.ClientToken == "" {
 		return nil, fmt.Errorf("client token empty")
 	}
@@ -26,28 +24,23 @@ func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data
 
 	path := data.Get("path").(string)
 	id := data.Get("id").(string)
+	priv := data.Get("privateKey").(string)
 	algo := data.Get("algo").(string)
-	curve := data.Get("curve").(string)
-
-	keypair, err := key.CreateKey(algo, curve)
+	keypair, err := keyPair.FromPrivateKey(priv, algo)
 	if err != nil {
-		return nil, errwrap.Wrapf("generate key pair failed: {{err}}", err)
+		return nil, errwrap.Wrapf("wrap key pair failed: {{err}}:", err)
 	}
+
+	fmt.Printf("%s%s%s%s", path, id, priv, algo)
 
 	keybuf, err := entities.FromKeyPair(id, keypair).ToBytes()
 	if err != nil {
 		return nil, errwrap.Wrapf("json encoding failed: {{err}}", err)
 	}
 
-	if err = storage.
-	NewStorage(req).
-	WithContext(ctx).
-	WithKey(req.ClientToken, path, id).
-	WithValue(keybuf).Write(); err != nil {
-		return nil, errwrap.Wrapf("store key pair failed: {{err}}", err)
+	if err = storage.NewStorage(req).WithContext(ctx).WithKey(req.ClientToken, path, id).WithValue(keybuf).Write(); err != nil {
+		return nil, errwrap.Wrapf("write to storage failed: {{err}}", err)
 	}
-
-	// h.logger.Debug("Handle Write", "data", data, "\nreq", req)
 
 	return nil, nil
 }

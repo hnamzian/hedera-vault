@@ -17,82 +17,76 @@ func NewKeyHandler() *KeyHandler {
 }
 
 func (h KeyHandler) Paths() []*framework.Path {
-	return []*framework.Path{
-		{
-			Pattern: "keys/?",
+	return framework.PathAppend(
+		[]*framework.Path{
+			{
+				Pattern: "keys/?",
 
-			Fields: map[string]*framework.FieldSchema{
-				"path": {
-					Type:        framework.TypeString,
-					Description: "Specifies the path of the secret.",
+				Fields: map[string]*framework.FieldSchema{
+					"path": {
+						Type:        framework.TypeString,
+						Description: "Specifies the path of the secret.",
+					},
+					"id": {
+						Type: framework.TypeString,
+					},
+					"algo": {
+						Type: framework.TypeString,
+					},
+					"curve": {
+						Type: framework.TypeString,
+					},
 				},
-				"id": {
-					Type: framework.TypeString,
+
+				Operations: map[logical.Operation]framework.OperationHandler{
+					logical.CreateOperation: &framework.PathOperation{
+						Callback: h.handleWrite,
+					},
+					logical.ReadOperation: &framework.PathOperation{
+						Callback: h.handleRead,
+					},
+					logical.ListOperation: &framework.PathOperation{
+						Callback: h.handleList,
+					},
+					logical.DeleteOperation: &framework.PathOperation{
+						Callback: h.handleDelete,
+					},
 				},
-				"algo": {
-					Type: framework.TypeString,
-				},
-				"curve": {
-					Type: framework.TypeString,
-				},
+
+				ExistenceCheck: h.handleExistenceCheck,
 			},
+			{
+				Pattern: "keys/import",
 
-			Operations: map[logical.Operation]framework.OperationHandler{
-				logical.CreateOperation: &framework.PathOperation{
-					Callback: h.handleWrite,
+				Fields: map[string]*framework.FieldSchema{
+					"path": {
+						Type:        framework.TypeString,
+						Description: "Specifies the path of the secret.",
+					},
+					"id": {
+						Type: framework.TypeString,
+					},
+					"privateKey": {
+						Type: framework.TypeString,
+					},
+					"algo": {
+						Type: framework.TypeString,
+					},
+					"curve": {
+						Type: framework.TypeString,
+					},
 				},
-				logical.ReadOperation: &framework.PathOperation{
-					Callback: h.handleRead,
+
+				Operations: map[logical.Operation]framework.OperationHandler{
+					logical.CreateOperation: &framework.PathOperation{
+						Callback: h.handleImport,
+					},
 				},
-				logical.ListOperation: &framework.PathOperation{
-					Callback: h.handleList,
-				},
-				logical.DeleteOperation: &framework.PathOperation{
-					Callback: h.handleDelete,
-				},
+
+				ExistenceCheck: h.handleExistenceCheck,
 			},
-
-			ExistenceCheck: h.handleExistenceCheck,
 		},
-	}
-	// return framework.PathAppend(
-	// 	[]*framework.Path{
-	// 		{
-	// 			Pattern: "keys/?",
-
-	// 			Fields: map[string]*framework.FieldSchema{
-	// 				"path": {
-	// 					Type:        framework.TypeString,
-	// 					Description: "Specifies the path of the secret.",
-	// 				},
-	// 				"id": {
-	// 					Type: framework.TypeString,
-	// 				},
-	// 				"algo": {
-	// 					Type: framework.TypeString,
-	// 				},
-	// 				"curve": {
-	// 					Type: framework.TypeString,
-	// 				},
-	// 			},
-
-	// 			Operations: map[logical.Operation]framework.OperationHandler{
-	// 				logical.CreateOperation: &framework.PathOperation{
-	// 					Callback: h.handleWrite,
-	// 				},
-	// 				logical.ReadOperation: &framework.PathOperation{
-	// 					Callback: h.handleRead,
-	// 				},
-	// 				logical.ListOperation: &framework.PathOperation{
-	// 					Callback: h.handleList,
-	// 				},
-	// 				logical.DeleteOperation: &framework.PathOperation{
-	// 					Callback: h.handleDelete,
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// )
+	)
 }
 
 func (h *KeyHandler) handleExistenceCheck(ctx context.Context, req *logical.Request, data *framework.FieldData) (bool, error) {
