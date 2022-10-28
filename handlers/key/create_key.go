@@ -10,6 +10,7 @@ import (
 	"github.com/hnamzian/hedera-vault-plugin/core/key"
 	keyEntity "github.com/hnamzian/hedera-vault-plugin/entities/key"
 	"github.com/hnamzian/hedera-vault-plugin/storage"
+	"github.com/hnamzian/hedera-vault-plugin/handlers/formatters"
 )
 
 func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
@@ -33,7 +34,8 @@ func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data
 		return nil, errwrap.Wrapf("generate key pair failed: {{err}}", err)
 	}
 
-	keybuf, err := keyEntity.FromKeyPair(id, keypair).ToBytes()
+	key_vault := keyEntity.FromKeyPair(id, keypair)
+	keybuf, err := key_vault.ToBytes()
 	if err != nil {
 		return nil, errwrap.Wrapf("json encoding failed: {{err}}", err)
 	}
@@ -42,11 +44,14 @@ func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data
 		NewStorage(req).
 		WithContext(ctx).
 		WithKey(req.ClientToken, path, id).
-		WithValue(keybuf).Write(); err != nil {
+		WithValue(keybuf).
+		Write(); err != nil {
 		return nil, errwrap.Wrapf("store key pair failed: {{err}}", err)
 	}
 
-	// h.logger.Debug("Handle Write", "data", data, "\nreq", req)
+	response_data := formatters.FormatResponse(key_vault)
 
-	return nil, nil
+	return &logical.Response{
+		Data: response_data,
+	}, nil
 }

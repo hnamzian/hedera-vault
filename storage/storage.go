@@ -8,10 +8,10 @@ import (
 )
 
 type Storage struct {
-	storage  logical.Storage
-	ctx context.Context
-	key string
-	val []byte
+	storage logical.Storage
+	ctx     context.Context
+	key     string
+	val     []byte
 }
 
 func NewStorage(req *logical.Request) *Storage {

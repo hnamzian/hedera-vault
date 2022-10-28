@@ -12,7 +12,7 @@ type Key struct {
 	ID         string `json:"id"`
 	Algorithm  string `json:"algorithm"`
 	Curve      string `json:"curve"`
-	PrivateKey string `json:"privateKey"`
+	PrivateKey string `json:"-"`
 	Publickey  string `json:"publicKey"`
 	CreatedAt  string `json:"createdAt"`
 	UpdatedAt  string `json:"updatedAt"`
