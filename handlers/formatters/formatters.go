@@ -15,9 +15,10 @@ func FormatResponse(s interface{}) map[string]interface{} {
 
 	m := make(map[string]interface{})
 	for i := 0; i < rv.NumField(); i++ {
-		t := v.Field(i).Tag.Get("json")
-		if t != "" && t != "-" {
-			m[t] = rv.Field(i).Interface()
+		tag_json := v.Field(i).Tag.Get("json")
+		tag_vault := v.Field(i).Tag.Get("vault")
+		if tag_vault != "-" {
+			m[tag_json] = rv.Field(i).Interface()
 		}
 	}
 
