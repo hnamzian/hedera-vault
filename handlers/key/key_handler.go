@@ -2,6 +2,7 @@ package key
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
@@ -79,6 +80,28 @@ func (h KeyHandler) Paths() []*framework.Path {
 				Operations: map[logical.Operation]framework.OperationHandler{
 					logical.CreateOperation: &framework.PathOperation{
 						Callback: h.handleImport,
+					},
+				},
+
+				ExistenceCheck: h.handleExistenceCheck,
+			},
+			{
+				Pattern: fmt.Sprintf("keys/%s/sign", framework.GenericNameRegex("id")),
+
+				Fields: map[string]*framework.FieldSchema{
+					"id": {
+						Type: framework.TypeString,
+						Required: true,
+					},
+					"message": {
+						Type: framework.TypeString,
+						Required: true,
+					},
+				},
+
+				Operations: map[logical.Operation]framework.OperationHandler{
+					logical.CreateOperation: &framework.PathOperation{
+						Callback: h.handleSign,
 					},
 				},
 
