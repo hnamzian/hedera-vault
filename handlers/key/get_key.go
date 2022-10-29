@@ -2,12 +2,14 @@ package key
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
-	"github.com/hashicorp/vault/sdk/helper/jsonutil"
 	"github.com/hashicorp/vault/sdk/logical"
+	"github.com/hnamzian/hedera-vault-plugin/entities/key"
+	"github.com/hnamzian/hedera-vault-plugin/handlers/formatters"
 	"github.com/hnamzian/hedera-vault-plugin/storage"
 )
 
@@ -29,14 +31,15 @@ func (h *KeyHandler) handleRead(ctx context.Context, req *logical.Request, data 
 		return resp, nil
 	}
 
-	var key map[string]interface{}
-	if err := jsonutil.DecodeJSON(key_buf, &key); err != nil {
-		return nil, errwrap.Wrapf("json decoding failed: {{err}}", err)
+	var key_vault key_entity.Key
+	if err := json.Unmarshal(key_buf, &key_vault); err != nil {
+		return nil, errwrap.Wrapf("parse key from vault failed: {{err}}", err)
 	}
-
+	response_data := formatters.FormatResponse(key_vault)
+	
 	// Generate the response
 	resp := &logical.Response{
-		Data: key,
+		Data: response_data,
 	}
 
 	return resp, nil
