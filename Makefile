@@ -31,8 +31,12 @@ test:
 	vault read hedera/keys id="1"
 	vault list hedera/keys
 	vault delete hedera/keys id="1"
-	vault write hedera/keys/import id="2" algo="ED25519" curve="" privateKey="302e020100300506032b657004220420cf963a0e4d623da76a4b9e6a779d1d9187a6bd920a60a1be4e793f90b4c562b5"
+	vault write hedera/keys/import id="2" algo="ED25519" curve="" privateKey="302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137"
 	vault read hedera/keys id="2"
+	vault write hedera/keys/2/sign message="123"
+	vault write hedera/accounts/import id="1" keyId="2" accountId="0.0.2"
+	vault read hedera/accounts id="1"
+	vault write hedera/accounts id="1" nextId="2"
 
 
 fmt:
