@@ -23,8 +23,8 @@ func (s *Storage) WithContext(ctx context.Context) *Storage {
 	return s
 }
 
-func (s *Storage) WithKey(clientToken, path, id string) *Storage {
-	key := fmt.Sprintf("%s/%s/%s", clientToken, path, id)
+func (s *Storage) WithKey(clientToken, id string) *Storage {
+	key := fmt.Sprintf("%s/%s", clientToken, id)
 	s.key = key
 	return s
 }

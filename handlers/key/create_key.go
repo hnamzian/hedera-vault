@@ -24,7 +24,6 @@ func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data
 		return nil, fmt.Errorf("data must be provided to store in secret")
 	}
 
-	path := data.Get("path").(string)
 	id := data.Get("id").(string)
 	algo := data.Get("algo").(string)
 	curve := data.Get("curve").(string)
@@ -43,7 +42,7 @@ func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data
 	if err = storage.
 		NewStorage(req.Storage).
 		WithContext(ctx).
-		WithKey(req.ClientToken, path, id).
+		WithKey(req.ClientToken, id).
 		WithValue(keybuf).
 		Write(); err != nil {
 		return nil, errwrap.Wrapf("store key pair failed: {{err}}", err)

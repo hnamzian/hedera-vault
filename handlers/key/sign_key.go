@@ -28,7 +28,7 @@ func (h *KeyHandler) handleSign(ctx context.Context, req *logical.Request, data 
 	id := data.Get("id").(string)
 	message := data.Get("message").(string)
 
-	key_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, "", id).Read()
+	key_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, id).Read()
 	if err != nil {
 		return nil, errwrap.Wrapf("read key by ID failed: {{err}}", err)
 	}

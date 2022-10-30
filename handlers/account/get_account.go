@@ -24,7 +24,7 @@ func (h *AccountHandler) handleRead(ctx context.Context, req *logical.Request, d
 
 	id := data.Get("id").(string)
 
-	account_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, "", id).Read()
+	account_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, id).Read()
 	if err != nil {
 		return nil, errwrap.Wrapf("read account from storage failed: {{err}}", err)
 	}

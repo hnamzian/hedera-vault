@@ -18,16 +18,15 @@ func (h *KeyHandler) handleRead(ctx context.Context, req *logical.Request, data 
 		return nil, fmt.Errorf("client token empty")
 	}
 
-	path := data.Get("path").(string)
 	id := data.Get("id").(string)
 
 	// Decode the data
-	key_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, path, id).Read()
+	key_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, id).Read()
 	if err != nil {
 		return nil, err
 	}
 	if key_buf == nil {
-		resp := logical.ErrorResponse("No value at %v%v", req.MountPoint, path)
+		resp := logical.ErrorResponse("No value at %v", req.MountPoint)
 		return resp, nil
 	}
 
