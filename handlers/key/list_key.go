@@ -19,7 +19,7 @@ func (h *KeyHandler) handleList(ctx context.Context, req *logical.Request, data 
 	keys, err := storage.
 		NewStorage(req.Storage).
 		WithContext(ctx).
-		WithKey(req.ClientToken, "").
+		WithKey(req.ClientToken, storage.Repository_Key, "").
 		List()
 	if err != nil {
 		return nil, err

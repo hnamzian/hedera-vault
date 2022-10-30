@@ -42,7 +42,7 @@ func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data
 	if err = storage.
 		NewStorage(req.Storage).
 		WithContext(ctx).
-		WithKey(req.ClientToken, id).
+		WithKey(req.ClientToken, storage.Repository_Key, id).
 		WithValue(keybuf).
 		Write(); err != nil {
 		return nil, errwrap.Wrapf("store key pair failed: {{err}}", err)

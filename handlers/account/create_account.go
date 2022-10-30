@@ -28,7 +28,11 @@ func (h *AccountHandler) handleCreate(ctx context.Context, req *logical.Request,
 	id := data.Get("id").(string)
 	nextId := data.Get("nextId").(string)
 
-	operator_account_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, id).Read()
+	operator_account_buf, err := storage.
+		NewStorage(req.Storage).
+		WithContext(ctx).
+		WithKey(req.ClientToken, storage.Repository_Account, id).
+		Read()
 	if err != nil {
 		return nil, errwrap.Wrapf("read account failed: {{err}}", err)
 	}
@@ -38,7 +42,11 @@ func (h *AccountHandler) handleCreate(ctx context.Context, req *logical.Request,
 		return nil, errwrap.Wrapf("decode account failed: {{err}}", err)
 	}
 
-	operator_key_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, operator_account.KeyID).Read()
+	operator_key_buf, err := storage.
+		NewStorage(req.Storage).
+		WithContext(ctx).
+		WithKey(req.ClientToken, storage.Repository_Key, operator_account.KeyID).
+		Read()
 	if err != nil {
 		return nil, errwrap.Wrapf("read account failed: {{err}}", err)
 	}
@@ -73,7 +81,7 @@ func (h *AccountHandler) handleCreate(ctx context.Context, req *logical.Request,
 	err = storage.
 		NewStorage(req.Storage).
 		WithContext(ctx).
-		WithKey(req.ClientToken, nextId).
+		WithKey(req.ClientToken, storage.Repository_Account, nextId).
 		WithValue(account_buf).Write()
 	if err != nil {
 		return nil, errwrap.Wrapf("write account to stoage failed: {{err}}", err)

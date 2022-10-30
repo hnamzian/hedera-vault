@@ -21,7 +21,11 @@ func (h *KeyHandler) handleRead(ctx context.Context, req *logical.Request, data 
 	id := data.Get("id").(string)
 
 	// Decode the data
-	key_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, id).Read()
+	key_buf, err := storage.
+		NewStorage(req.Storage).
+		WithContext(ctx).
+		WithKey(req.ClientToken, storage.Repository_Key, id).
+		Read()
 	if err != nil {
 		return nil, err
 	}

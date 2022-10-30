@@ -20,7 +20,7 @@ func (h *KeyHandler) handleDelete(ctx context.Context, req *logical.Request, dat
 	if err := storage.
 		NewStorage(req.Storage).
 		WithContext(ctx).
-		WithKey(req.ClientToken, id).
+		WithKey(req.ClientToken, storage.Repository_Key, id).
 		Delete(); err != nil {
 		return nil, fmt.Errorf("delete key from storage failed %s", err)
 	}

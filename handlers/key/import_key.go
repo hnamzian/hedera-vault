@@ -42,7 +42,7 @@ func (h *KeyHandler) handleImport(ctx context.Context, req *logical.Request, dat
 	err = storage.
 		NewStorage(req.Storage).
 		WithContext(ctx).
-		WithKey(req.ClientToken, id).
+		WithKey(req.ClientToken, storage.Repository_Key, id).
 		WithValue(keybuf).
 		Write()
 	if err != nil {

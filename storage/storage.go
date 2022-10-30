@@ -14,6 +14,11 @@ type Storage struct {
 	val     []byte
 }
 
+const (
+	Repository_Key = "key";
+	Repository_Account = "account"
+)
+
 func NewStorage(storage logical.Storage) *Storage {
 	return &Storage{storage: storage}
 }
@@ -23,8 +28,8 @@ func (s *Storage) WithContext(ctx context.Context) *Storage {
 	return s
 }
 
-func (s *Storage) WithKey(clientToken, id string) *Storage {
-	key := fmt.Sprintf("%s/%s", clientToken, id)
+func (s *Storage) WithKey(clientToken, repository, id string) *Storage {
+	key := fmt.Sprintf("%s/%s/%s", clientToken, repository, id)
 	s.key = key
 	return s
 }
