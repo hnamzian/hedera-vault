@@ -16,7 +16,7 @@ func (h *KeyHandler) handleList(ctx context.Context, req *logical.Request, data 
 
 	path := data.Get("path").(string)
 
-	keys, err := storage.NewStorage(req).WithContext(ctx).WithKey(req.ClientToken, path, "").List()
+	keys, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, path, "").List()
 	if err != nil {
 		return nil, err
 	}

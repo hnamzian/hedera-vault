@@ -38,7 +38,7 @@ func (h *KeyHandler) handleImport(ctx context.Context, req *logical.Request, dat
 		return nil, errwrap.Wrapf("json encoding failed: {{err}}", err)
 	}
 
-	if err = storage.NewStorage(req).WithContext(ctx).WithKey(req.ClientToken, path, id).WithValue(keybuf).Write(); err != nil {
+	if err = storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, path, id).WithValue(keybuf).Write(); err != nil {
 		return nil, errwrap.Wrapf("write to storage failed: {{err}}", err)
 	}
 

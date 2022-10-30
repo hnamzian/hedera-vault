@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
-	"github.com/hnamzian/hedera-vault-plugin/entities/key"
+	key_entity "github.com/hnamzian/hedera-vault-plugin/entities/key"
 	"github.com/hnamzian/hedera-vault-plugin/handlers/formatters"
 	"github.com/hnamzian/hedera-vault-plugin/storage"
 )
@@ -22,7 +22,7 @@ func (h *KeyHandler) handleRead(ctx context.Context, req *logical.Request, data 
 	id := data.Get("id").(string)
 
 	// Decode the data
-	key_buf, err := storage.NewStorage(req).WithContext(ctx).WithKey(req.ClientToken, path, id).Read()
+	key_buf, err := storage.NewStorage(req.Storage).WithContext(ctx).WithKey(req.ClientToken, path, id).Read()
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (h *KeyHandler) handleRead(ctx context.Context, req *logical.Request, data 
 		return nil, errwrap.Wrapf("parse key from vault failed: {{err}}", err)
 	}
 	response_data := formatters.FormatResponse(key_vault)
-	
+
 	// Generate the response
 	resp := &logical.Response{
 		Data: response_data,

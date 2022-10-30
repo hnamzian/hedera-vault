@@ -19,7 +19,7 @@ func (h *KeyHandler) handleDelete(ctx context.Context, req *logical.Request, dat
 
 	// Remove entry for specified path
 	if err := storage.
-		NewStorage(req).
+		NewStorage(req.Storage).
 		WithContext(ctx).
 		WithKey(req.ClientToken, path, id).
 		Delete(); err != nil {

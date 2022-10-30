@@ -34,7 +34,7 @@ func (h *AccountHandler) handleImport(ctx context.Context, req *logical.Request,
 	}
 
 	err = storage.
-		NewStorage(req).
+		NewStorage(req.Storage).
 		WithContext(ctx).
 		WithKey(req.ClientToken, "", id).
 		WithValue(account_buf).

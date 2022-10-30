@@ -14,8 +14,8 @@ type Storage struct {
 	val     []byte
 }
 
-func NewStorage(req *logical.Request) *Storage {
-	return &Storage{storage: req.Storage}
+func NewStorage(storage logical.Storage) *Storage {
+	return &Storage{storage: storage}
 }
 
 func (s *Storage) WithContext(ctx context.Context) *Storage {

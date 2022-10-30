@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/vault/sdk/logical"
 	"github.com/hnamzian/hedera-vault-plugin/core/key"
 	keyEntity "github.com/hnamzian/hedera-vault-plugin/entities/key"
-	"github.com/hnamzian/hedera-vault-plugin/storage"
 	"github.com/hnamzian/hedera-vault-plugin/handlers/formatters"
+	"github.com/hnamzian/hedera-vault-plugin/storage"
 )
 
 func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
@@ -41,7 +41,7 @@ func (h *KeyHandler) handleWrite(ctx context.Context, req *logical.Request, data
 	}
 
 	if err = storage.
-		NewStorage(req).
+		NewStorage(req.Storage).
 		WithContext(ctx).
 		WithKey(req.ClientToken, path, id).
 		WithValue(keybuf).
