@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/vault/api"
 	"github.com/hashicorp/vault/sdk/plugin"
-	"github.com/hnamzian/hedera-vault-plugin/backend"
+	"github.com/hnamzian/hedera-vault-plugin/src"
 )
 
 func main() {
