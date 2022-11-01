@@ -16,10 +16,10 @@ func CreateAccount(ctx context.Context, req *logical.Request, data *framework.Fi
 	}
 
 	id := data.Get("id").(string)
-	nextID := data.Get("nextId").(string)
+	newID := data.Get("newId").(string)
 
 	a_svc := service.New(ctx, req.Storage, req.ClientToken)
-	account, err := a_svc.CreateAccount(id, nextID)
+	account, err := a_svc.CreateAccount(id, newID)
 	if err != nil {
 		return nil, err
 	}

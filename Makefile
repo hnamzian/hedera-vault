@@ -36,7 +36,7 @@ test:
 	vault write hedera/keys/2/sign message="123"
 	vault write hedera/accounts/import id="1" keyId="2" accountId="0.0.2"
 	vault read hedera/accounts id="1"
-	vault write hedera/accounts id="1" nextId="2"
+	vault write hedera/accounts id="1" newId="2"
 	vault write hedera/token \
 		operatorId="1" \
 		adminId="1" \

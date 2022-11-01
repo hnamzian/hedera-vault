@@ -8,7 +8,7 @@ import (
 	hc "github.com/hnamzian/hedera-vault-plugin/src/core/hedera"
 )
 
-func (a_svc *AccountService) CreateAccount(id, nextID string) (*entity.Account, error) {
+func (a_svc *AccountService) CreateAccount(id, newID string) (*entity.Account, error) {
 	operator_account, err := a_svc.storage.Read(id)
 	if err != nil {
 		return nil, err
@@ -33,8 +33,8 @@ func (a_svc *AccountService) CreateAccount(id, nextID string) (*entity.Account, 
 		return nil, fmt.Errorf("create new account failed: %s", err)
 	}
 
-	new_account := entity.New(nextID, new_account_id.String(), operator_account.KeyID)
-	if err := a_svc.storage.Write(nextID, new_account); err != nil {
+	new_account := entity.New(newID, new_account_id.String(), operator_account.KeyID)
+	if err := a_svc.storage.Write(newID, new_account); err != nil {
 		return nil, err
 	}
 

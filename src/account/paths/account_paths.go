@@ -27,7 +27,7 @@ func pathAccounts() *framework.Path {
 				Type:     framework.TypeString,
 				Required: true,
 			},
-			"nextId": {
+			"newId": {
 				Type:     framework.TypeString,
 				Required: true,
 			},
