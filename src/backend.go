@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/vault/sdk/logical"
 	kp "github.com/hnamzian/hedera-vault-plugin/src/key/paths"
 	ap "github.com/hnamzian/hedera-vault-plugin/src/account/paths"
-	// accountHandler "github.com/hnamzian/hedera-vault-plugin/handlers/account"
+	tp "github.com/hnamzian/hedera-vault-plugin/src/token/paths"
 )
 
 // backend wraps the backend framework and adds a map for storing key value pairs
@@ -47,6 +47,7 @@ func newBackend() (*backend, error) {
 		Paths: framework.PathAppend(
 			kp.NewKeyPaths().Paths(),
 			ap.Paths(),
+			tp.NewKeyPaths().Paths(),
 		),
 	}
 
