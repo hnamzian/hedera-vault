@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 
@@ -16,14 +15,14 @@ func GetAccount(ctx context.Context, req *logical.Request, data *framework.Field
 	if req.ClientToken == "" {
 		return nil, fmt.Errorf("client token empty")
 	}
-	
+
 	id := data.Get("id").(string)
-	
+
 	a_svc := service.New(ctx, req.Storage, req.ClientToken)
 
 	account, err := a_svc.GetAccount(id)
 	if err != nil {
-		return nil, errwrap.Wrapf("Read Account form storage failed: {{err}}", err)
+		return nil, fmt.Errorf("read Account form storage failed: %s", err)
 	}
 
 	return &logical.Response{

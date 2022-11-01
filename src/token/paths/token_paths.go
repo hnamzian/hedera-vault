@@ -2,8 +2,8 @@ package paths
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 
@@ -31,23 +31,23 @@ func pathToken() *framework.Path {
 
 		Fields: map[string]*framework.FieldSchema{
 			"operatorId": {
-				Type: framework.TypeString,
+				Type:     framework.TypeString,
 				Required: true,
 			},
 			"adminId": {
-				Type: framework.TypeString,
+				Type:     framework.TypeString,
 				Required: true,
 			},
 			"treasuryId": {
-				Type: framework.TypeString,
+				Type:     framework.TypeString,
 				Required: true,
 			},
 			"name": {
-				Type: framework.TypeString,
+				Type:     framework.TypeString,
 				Required: true,
 			},
 			"symbol": {
-				Type: framework.TypeString,
+				Type:     framework.TypeString,
 				Required: true,
 			},
 			"decimals": {
@@ -55,16 +55,6 @@ func pathToken() *framework.Path {
 			},
 			"initSupply": {
 				Type: framework.TypeInt,
-			},
-			"treasuryAccountId": {
-				Type: framework.TypeString,
-				Required: true,
-			},
-			"treasuryKey": {
-				Type: framework.TypeString,
-			},
-			"adminKey": {
-				Type: framework.TypeString,
 			},
 			"kycKey": {
 				Type: framework.TypeString,
@@ -120,7 +110,7 @@ func pathToken() *framework.Path {
 func handleExistenceCheck(ctx context.Context, req *logical.Request, data *framework.FieldData) (bool, error) {
 	out, err := req.Storage.Get(ctx, req.Path)
 	if err != nil {
-		return false, errwrap.Wrapf("existence check failed: {{err}}", err)
+		return false, fmt.Errorf("existence check failed: %s", err)
 	}
 
 	return out != nil, nil

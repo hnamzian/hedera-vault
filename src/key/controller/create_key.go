@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 
@@ -15,7 +14,7 @@ func Create(ctx context.Context, req *logical.Request, data *framework.FieldData
 	if req.ClientToken == "" {
 		return nil, fmt.Errorf("client token empty")
 	}
-	
+
 	id := data.Get("id").(string)
 	algo := data.Get("algo").(string)
 	curve := data.Get("curve").(string)
@@ -23,7 +22,7 @@ func Create(ctx context.Context, req *logical.Request, data *framework.FieldData
 	kc := New(ctx, req)
 	key, err := kc.service.Create(id, algo, curve)
 	if err != nil {
-		return nil, errwrap.Wrapf("create new key failed: {{err}}", err)
+		return nil, fmt.Errorf("create new key failed: %s", err)
 	}
 
 	return &logical.Response{

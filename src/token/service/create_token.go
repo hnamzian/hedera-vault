@@ -20,34 +20,28 @@ func (t_svc *TokenService) CreateToken(tokenCreation *hc.FTokenCreation, operato
 	admin_account, _ := t_svc.a_svc.GetAccount(adminID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive admin account from vault failed: %s", err)
-
 	}
 	admin_key, _ := t_svc.k_svc.Get(admin_account.KeyID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive admin key from vault failed: %s", err)
-
 	}
 
 	treasury_account, _ := t_svc.a_svc.GetAccount(treasuryID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive treasury account from vault failed: %s", err)
-
 	}
 	treasury_key, _ := t_svc.k_svc.Get(treasury_account.KeyID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive treasury key from vault failed: %s", err)
-
 	}
 
 	operatorAccountID, _ := hedera.AccountIDFromString(operator_account.AccountID)
 	if err != nil {
 		return nil, fmt.Errorf("parse operator account id failed: %s", err)
-
 	}
 	operatorPrivateKey, _ := hedera.PrivateKeyFromString(operator_key.PrivateKey)
 	if err != nil {
 		return nil, fmt.Errorf("parse operator key failed: %s", err)
-
 	}
 
 	adminPrivateKey, _ := hedera.PrivateKeyFromString(admin_key.PrivateKey)

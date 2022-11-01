@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 
@@ -15,14 +14,14 @@ func Get(ctx context.Context, req *logical.Request, data *framework.FieldData) (
 	if req.ClientToken == "" {
 		return nil, fmt.Errorf("client token empty")
 	}
-	
+
 	id := data.Get("id").(string)
-	
+
 	kc := New(ctx, req)
 
 	key, err := kc.service.Get(id)
 	if err != nil {
-		return nil, errwrap.Wrapf("Read Key form storage failed: {{err}}", err)
+		return nil, fmt.Errorf("Read Key form storage failed: %s", err)
 	}
 
 	return &logical.Response{

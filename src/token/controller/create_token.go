@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
-	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 	hc "github.com/hnamzian/hedera-vault-plugin/src/core/hedera"
@@ -26,9 +25,6 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 	symbol := data.Get("symbol").(string)
 	decimals := uint(data.Get("decimals").(int))
 	initSupply := uint(data.Get("initSupply").(int))
-	
-	treasuryAccountIdString := data.Get("treasuryAccountId").(string)
-	treasuryAccountID, _ := hedera.AccountIDFromString(treasuryAccountIdString)
 
 	kycKeyString := data.Get("kycKey").(string)
 	kycKey := hedera.PublicKey{}
@@ -41,25 +37,25 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 	if len(freezeKeyString) != 0 {
 		freezeKey, _ = hedera.PublicKeyFromString(freezeKeyString)
 	}
-	
+
 	wipeKeyString := data.Get("wipeKey").(string)
 	wipeKey := hedera.PublicKey{}
 	if len(wipeKeyString) != 0 {
 		wipeKey, _ = hedera.PublicKeyFromString(wipeKeyString)
 	}
-	
+
 	supplyKeyString := data.Get("supplyKey").(string)
 	supplyKey := hedera.PublicKey{}
 	if len(supplyKeyString) != 0 {
 		supplyKey, _ = hedera.PublicKeyFromString(supplyKeyString)
 	}
-	
+
 	feeScheduleKeyString := data.Get("feeScheduleKey").(string)
 	feeScheduleKey := hedera.PublicKey{}
 	if len(feeScheduleKeyString) != 0 {
 		feeScheduleKey, _ = hedera.PublicKeyFromString(feeScheduleKeyString)
 	}
-	
+
 	pauseKeyString := data.Get("pauseKey").(string)
 	pauseKey := hedera.PublicKey{}
 	if len(pauseKeyString) != 0 {
@@ -70,7 +66,7 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 	maxSupply := uint(data.Get("maxSupply").(int))
 	supplyType := data.Get("supplyType").(string)
 	freezeDefault := data.Get("freezeDefault").(bool)
-	
+
 	expirationTimeString := data.Get("expirationTime").(string)
 	expirationTime, _ := time.Parse("2006-01-02", expirationTimeString)
 
@@ -80,56 +76,53 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 	memo := data.Get("memo").(string)
 
 	tokenCreation := &hc.FTokenCreation{
-		Name: name,
-		Symbol: symbol,
-		Decimals: decimals,
-		InitSupply: initSupply,
-		TreasuryAccountID: treasuryAccountID,
-		KycKey: kycKey,
-		FreezeKey: freezeKey,
-		WipeKey: wipeKey,
-		SupplyKey: supplyKey,
-		FeeScheduleKey: feeScheduleKey,
-		PauseKey: pauseKey,
-		CustomFees: nil,
-		MaxSupply: maxSupply,
-		SupplyType: supplyType,
-		FreezeDefault: freezeDefault,
-		ExpirationTime: expirationTime,
+		Name:             name,
+		Symbol:           symbol,
+		Decimals:         decimals,
+		InitSupply:       initSupply,
+		KycKey:           kycKey,
+		FreezeKey:        freezeKey,
+		WipeKey:          wipeKey,
+		SupplyKey:        supplyKey,
+		FeeScheduleKey:   feeScheduleKey,
+		PauseKey:         pauseKey,
+		CustomFees:       nil,
+		MaxSupply:        maxSupply,
+		SupplyType:       supplyType,
+		FreezeDefault:    freezeDefault,
+		ExpirationTime:   expirationTime,
 		AutoRenewAccount: autoRenewAccount,
-		Memo: memo,
+		Memo:             memo,
 	}
-	
 
 	t_svc := service.New(ctx, req.Storage, req.ClientToken)
 
 	tokenID, err := t_svc.CreateToken(tokenCreation, operatorID, adminID, treasuryID)
 	if err != nil {
-		return nil, errwrap.Wrapf("create token failed: {{err}}", err)
+		return nil, fmt.Errorf("create token failed: %s", err)
 	}
 
 	return &logical.Response{
 		Data: map[string]interface{}{
-			"name": name,
-			"symbol": symbol,
-			"decimals": decimals,
-			"initSupply": initSupply,
-			"treasuryAccountID": treasuryAccountIdString,
-			// "treasuryKey": treasuryKeyString,
-			// "adminKey": adminKeyString,
-			"maxSupply": maxSupply,
-			"kycKey": kycKeyString,
-			"freezeKey": freezeKeyString,
-			"wipeKey": wipeKeyString,
-			"supplyKey": supplyKeyString,
-			"feeScheduleKey": feeScheduleKeyString,
-			"pauseKey": pauseKeyString,
-			"supplyType": supplyType,
-			"freezeDefault": freezeDefault,
+			"name":             name,
+			"symbol":           symbol,
+			"decimals":         decimals,
+			"initSupply":       initSupply,
+			"treasuryID":       treasuryID,
+			"adminID":          adminID,
+			"maxSupply":        maxSupply,
+			"kycKey":           kycKeyString,
+			"freezeKey":        freezeKeyString,
+			"wipeKey":          wipeKeyString,
+			"supplyKey":        supplyKeyString,
+			"feeScheduleKey":   feeScheduleKeyString,
+			"pauseKey":         pauseKeyString,
+			"supplyType":       supplyType,
+			"freezeDefault":    freezeDefault,
 			"autoRenewAccount": autoRenewAccountString,
-			"expirationTime": expirationTimeString,
-			"memo": memo,
-			"tokenID": tokenID.String(),
+			"expirationTime":   expirationTimeString,
+			"memo":             memo,
+			"tokenID":          tokenID.String(),
 		},
 	}, nil
 }
