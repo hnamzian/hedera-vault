@@ -37,7 +37,18 @@ test:
 	vault write hedera/accounts/import id="1" keyId="2" accountId="0.0.2"
 	vault read hedera/accounts id="1"
 	vault write hedera/accounts id="1" nextId="2"
-
+	vault write hedera/token \
+		operatorId="1" \
+		adminId="1" \
+		treasuryId="1" \
+		name="test" \
+		symbol="tst" \
+		decimal="3" \
+		initSupply=100000 \
+		maxSupply=10000000 \
+		adminKey="302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137" \
+		treasuryKey="302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137" \
+		treasuryAccountId="0.0.2"
 
 fmt:
 	go fmt $$(go list ./...)
