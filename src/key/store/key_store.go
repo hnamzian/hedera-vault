@@ -67,5 +67,5 @@ func (ks *KeyStore) Delete(id string) error {
 }
 
 func (ks *KeyStore) getKey(id string) string {
-	return fmt.Sprintf("%s/%s/%s", ks.clientToken, "key", id)
+	return fmt.Sprintf("%s/%s/%s", ks.clientToken, "keys", id)
 }

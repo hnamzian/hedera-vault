@@ -34,7 +34,6 @@ func (a_svc *AccountService) CreateAccount(id, nextID string) (*entity.Account, 
 	}
 
 	new_account := entity.New(nextID, new_account_id.String(), operator_account.KeyID)
-
 	if err := a_svc.storage.Write(nextID, new_account); err != nil {
 		return nil, err
 	}

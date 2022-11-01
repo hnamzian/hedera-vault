@@ -67,5 +67,5 @@ func (as *AccountStore) Delete(id string) error {
 }
 
 func (as *AccountStore) getKey(id string) string {
-	return fmt.Sprintf("%s/%s/%s", as.clientToken, "key", id)
+	return fmt.Sprintf("%s/%s/%s", as.clientToken, "accounts", id)
 }
