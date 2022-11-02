@@ -51,16 +51,16 @@ func (t *Token) CreateFT(tokenCreation *FTokenCreation) (*hedera.TokenID, error)
 		tokenCreateTransaction = tokenCreateTransaction.SetKycKey(tokenCreation.KycKey)
 	}
 	if tokenCreation.FreezeKey != (hedera.PublicKey{}) {
-		tokenCreateTransaction = tokenCreateTransaction.SetFreezeKey(tokenCreation.KycKey)
+		tokenCreateTransaction = tokenCreateTransaction.SetFreezeKey(tokenCreation.FreezeKey)
 	}
 	if tokenCreation.SupplyKey != (hedera.PublicKey{}) {
-		tokenCreateTransaction = tokenCreateTransaction.SetSupplyKey(tokenCreation.KycKey)
+		tokenCreateTransaction = tokenCreateTransaction.SetSupplyKey(tokenCreation.SupplyKey)
 	}
 	if tokenCreation.FeeScheduleKey != (hedera.PublicKey{}) {
-		tokenCreateTransaction = tokenCreateTransaction.SetFeeScheduleKey(tokenCreation.KycKey)
+		tokenCreateTransaction = tokenCreateTransaction.SetFeeScheduleKey(tokenCreation.FeeScheduleKey)
 	}
 	if tokenCreation.PauseKey != (hedera.PublicKey{}) {
-		tokenCreateTransaction = tokenCreateTransaction.SetPauseKey(tokenCreation.KycKey)
+		tokenCreateTransaction = tokenCreateTransaction.SetPauseKey(tokenCreation.PauseKey)
 	}
 	if tokenCreation.MaxSupply != 0 {
 		tokenCreateTransaction = tokenCreateTransaction.
