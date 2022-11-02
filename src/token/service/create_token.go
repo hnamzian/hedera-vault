@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
-	hc "github.com/hnamzian/hedera-vault-plugin/src/core/hedera"
+	hedera_client "github.com/hnamzian/hedera-vault-plugin/src/core/hedera"
+	hedera_token "github.com/hnamzian/hedera-vault-plugin/src/core/hedera/token"
 )
 
-func (t_svc *TokenService) CreateToken(tokenCreation *hc.FTokenCreation, operatorID, adminID, treasuryID string) (*hedera.TokenID, error) {
+func (t_svc *TokenService) CreateToken(tokenCreation *hedera_token.FTokenCreation, operatorID, adminID, treasuryID string) (*hedera.TokenID, error) {
 	operator_account, err := t_svc.a_svc.GetAccount(operatorID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive operator account from vault failed: %s", err)
@@ -73,9 +74,11 @@ func (t_svc *TokenService) CreateToken(tokenCreation *hc.FTokenCreation, operato
 	tokenCreation.TreasuryPrivateKey = treasuryPrivateKey
 	tokenCreation.TreasuryPublicKey = treasuryPublicKey
 
-	client := hc.NewClient(hc.LocalTestNetClientConfig())
-
-	return client.
+	client := hedera_client.
+		NewClient(hedera_client.LocalTestNetClientConfig()).
 		WithOperator(operatorAccountID, operatorPrivateKey).
-		CreateFT(tokenCreation)
+		GetClient()
+	ht := hedera_token.New(client)
+
+	return ht.CreateFT(tokenCreation)
 }

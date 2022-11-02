@@ -8,7 +8,7 @@ import (
 	"github.com/hashgraph/hedera-sdk-go/v2"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
-	hc "github.com/hnamzian/hedera-vault-plugin/src/core/hedera"
+	ht "github.com/hnamzian/hedera-vault-plugin/src/core/hedera/token"
 	"github.com/hnamzian/hedera-vault-plugin/src/token/service"
 )
 
@@ -75,7 +75,7 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 
 	memo := data.Get("memo").(string)
 
-	tokenCreation := &hc.FTokenCreation{
+	tokenCreation := &ht.FTokenCreation{
 		Name:             name,
 		Symbol:           symbol,
 		Decimals:         decimals,

@@ -1,4 +1,4 @@
-package hedera_client
+package token
 
 import (
 	"fmt"
@@ -32,7 +32,7 @@ type FTokenCreation struct {
 	Memo               string            `json:"memo"`
 }
 
-func (hc *HederaClient) CreateFT(tokenCreation *FTokenCreation) (*hedera.TokenID, error) {
+func (t *Token) CreateFT(tokenCreation *FTokenCreation) (*hedera.TokenID, error) {
 	tokenCreateTransaction := hedera.NewTokenCreateTransaction().
 		SetTokenName(tokenCreation.Name).
 		SetTokenSymbol(tokenCreation.Symbol).
@@ -81,7 +81,7 @@ func (hc *HederaClient) CreateFT(tokenCreation *FTokenCreation) (*hedera.TokenID
 	}
 	tokenCreateTransaction = tokenCreateTransaction.SetFreezeDefault(tokenCreation.FreezeDefault)
 
-	transaction, err := tokenCreateTransaction.FreezeWith(hc.client)
+	transaction, err := tokenCreateTransaction.FreezeWith(t.client)
 	if err != nil {
 		return nil, fmt.Errorf("freeze transaction failed: %s", err)
 	}
@@ -89,12 +89,12 @@ func (hc *HederaClient) CreateFT(tokenCreation *FTokenCreation) (*hedera.TokenID
 	txResponse, err := transaction.
 		Sign(tokenCreation.AdminPrivateKey).
 		Sign(hedera.PrivateKey(tokenCreation.TreasuryPrivateKey)).
-		Execute(hc.client)
+		Execute(t.client)
 	if err != nil {
 		return nil, fmt.Errorf("execute transaction failed: %s", err)
 	}
 
-	receipt, err := txResponse.GetReceipt(hc.client)
+	receipt, err := txResponse.GetReceipt(t.client)
 	if err != nil {
 		return nil, fmt.Errorf("get transaction receipt failed: %s", err)
 	}
