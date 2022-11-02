@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/vault/sdk/framework"
 
 	"github.com/hashicorp/vault/sdk/logical"
-	kp "github.com/hnamzian/hedera-vault-plugin/src/key/paths"
 	ap "github.com/hnamzian/hedera-vault-plugin/src/account/paths"
+	kp "github.com/hnamzian/hedera-vault-plugin/src/key/paths"
 	tp "github.com/hnamzian/hedera-vault-plugin/src/token/paths"
 )
 
@@ -47,10 +47,10 @@ func newBackend() (*backend, error) {
 		Paths: framework.PathAppend(
 			kp.NewKeyPaths().Paths(),
 			ap.NewAccountPaths().Paths(),
-			tp.NewKeyPaths().Paths(),
+			tp.NewTokenPaths().Paths(),
 		),
 	}
-
+	
 	return b, nil
 }
 

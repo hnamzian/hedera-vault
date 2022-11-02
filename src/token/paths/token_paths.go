@@ -10,14 +10,14 @@ import (
 	tc "github.com/hnamzian/hedera-vault-plugin/src/token/controller"
 )
 
-type KeyPaths struct {
+type TokenPaths struct {
 }
 
-func NewKeyPaths() *KeyPaths {
-	return &KeyPaths{}
+func NewTokenPaths() *TokenPaths {
+	return &TokenPaths{}
 }
 
-func (kp KeyPaths) Paths() []*framework.Path {
+func (tp TokenPaths) Paths() []*framework.Path {
 	return framework.PathAppend(
 		[]*framework.Path{
 			pathToken(),
