@@ -5,7 +5,8 @@ import (
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
 	"github.com/hnamzian/hedera-vault-plugin/src/account/entity"
-	hc "github.com/hnamzian/hedera-vault-plugin/src/core/hedera"
+	hedera_client "github.com/hnamzian/hedera-vault-plugin/src/core/hedera"
+	hedera_account "github.com/hnamzian/hedera-vault-plugin/src/core/hedera/account"
 )
 
 func (a_svc *AccountService) CreateAccount(id, newID string) (*entity.Account, error) {
@@ -19,7 +20,6 @@ func (a_svc *AccountService) CreateAccount(id, newID string) (*entity.Account, e
 		return nil, fmt.Errorf("decode account failed: %s", err)
 	}
 
-	client := hc.NewClient(hc.LocalTestNetClientConfig())
 	operator_account_id, err := hedera.AccountIDFromString(operator_account.AccountID)
 	if err != nil {
 		return nil, fmt.Errorf("invalid account ID: %s", err)
@@ -28,7 +28,14 @@ func (a_svc *AccountService) CreateAccount(id, newID string) (*entity.Account, e
 	if err != nil {
 		return nil, fmt.Errorf("invalid private key: %s", err)
 	}
-	new_account_id, err := client.WithOperator(operator_account_id, operator_private_key).NewAccount(operator_private_key)
+
+	client := hedera_client.
+		NewClient(hedera_client.LocalTestNetClientConfig()).
+		WithOperator(operator_account_id, operator_private_key).
+		GetClient()
+	ha := hedera_account.New(client)
+
+	new_account_id, err := ha.NewAccount(operator_private_key)
 	if err != nil {
 		return nil, fmt.Errorf("create new account failed: %s", err)
 	}

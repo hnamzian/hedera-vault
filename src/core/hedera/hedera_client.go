@@ -34,6 +34,10 @@ func NewClient(configs *HederaClientConfigs) *HederaClient {
 	return &HederaClient{client, configs}
 }
 
+func (hc *HederaClient) GetClient() *hedera.Client {
+	return hc.client
+}
+
 func (hc *HederaClient) WithOperator(operatorAccountID hedera.AccountID, operatorPrivateKey hedera.PrivateKey) *HederaClient {
 	hc.client.SetOperator(operatorAccountID, operatorPrivateKey)
 	return hc
