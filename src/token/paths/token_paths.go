@@ -57,22 +57,22 @@ func pathToken() *framework.Path {
 			"initSupply": {
 				Type: framework.TypeInt,
 			},
-			"kycKey": {
+			"kycId": {
 				Type: framework.TypeString,
 			},
-			"freezeKey": {
+			"freezeId": {
 				Type: framework.TypeString,
 			},
-			"wipeKey": {
+			"wipeId": {
 				Type: framework.TypeString,
 			},
 			"supplyId": {
 				Type: framework.TypeString,
 			},
-			"feeScheduleKey": {
+			"feeScheduleId": {
 				Type: framework.TypeString,
 			},
-			"pauseKey": {
+			"pauseId": {
 				Type: framework.TypeString,
 			},
 			"customFees": {
