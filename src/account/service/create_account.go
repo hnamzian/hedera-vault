@@ -14,7 +14,7 @@ func (a_svc *AccountService) CreateAccount(id, newID string) (*entity.Account, e
 		return nil, err
 	}
 
-	operator_key, err := a_svc.k_svc.Get(operator_account.KeyID)
+	operator_key, err := a_svc.k_svc.GetKey(operator_account.KeyID)
 	if err != nil {
 		return nil, fmt.Errorf("decode account failed: %s", err)
 	}

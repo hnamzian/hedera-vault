@@ -22,7 +22,7 @@ func GetAccount(ctx context.Context, req *logical.Request, data *framework.Field
 
 	account, err := a_svc.GetAccount(id)
 	if err != nil {
-		return nil, fmt.Errorf("read Account form storage failed: %s", err)
+		return nil, err
 	}
 
 	return &logical.Response{

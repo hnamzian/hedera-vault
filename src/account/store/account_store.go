@@ -25,7 +25,7 @@ func New(ctx context.Context, storage logical.Storage, clientToken string) *Acco
 func (as *AccountStore) Write(id string, account *entity.Account) error {
 	account_buf, err := account.ToBytes()
 	if err != nil {
-		return err
+		return fmt.Errorf("encode accounts to bytes failed: %s", err)
 	}
 
 	entry := &logical.StorageEntry{
@@ -34,7 +34,7 @@ func (as *AccountStore) Write(id string, account *entity.Account) error {
 		SealWrap: false,
 	}
 	if err := as.storage.Put(as.ctx, entry); err != nil {
-		return err
+		return fmt.Errorf("write account to storage failed: %s", err)
 	}
 	return nil
 }
@@ -42,13 +42,17 @@ func (as *AccountStore) Write(id string, account *entity.Account) error {
 func (as *AccountStore) Read(id string) (*entity.Account, error) {
 	entry, err := as.storage.Get(as.ctx, as.getKey(id))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("fetch account from storage failed: %s", err)
+	}
+
+	if entry == nil {
+		return nil, fmt.Errorf("account not found")
 	}
 
 	account_buf := entry.Value
 	account, err := entity.FromBytes(account_buf)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("encode account to byte failed: %s", err)
 	}
 
 	return account, nil
@@ -57,7 +61,7 @@ func (as *AccountStore) Read(id string) (*entity.Account, error) {
 func (as *AccountStore) List() ([]string, error) {
 	entries, err := as.storage.List(as.ctx, as.getKey(""))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("fetch accounts from storage failed: %s", err)
 	}
 	return entries, nil
 }
