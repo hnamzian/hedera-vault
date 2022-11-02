@@ -41,6 +41,7 @@ test:
 		operatorId="1" \
 		adminId="1" \
 		treasuryId="1" \
+		supplyId="1" \
 		name="test" \
 		symbol="tst" \
 		decimal="3" \

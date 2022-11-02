@@ -44,11 +44,7 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 		wipeKey, _ = hedera.PublicKeyFromString(wipeKeyString)
 	}
 
-	supplyKeyString := data.Get("supplyKey").(string)
-	supplyKey := hedera.PublicKey{}
-	if len(supplyKeyString) != 0 {
-		supplyKey, _ = hedera.PublicKeyFromString(supplyKeyString)
-	}
+	supplyID := data.Get("supplyId").(string)
 
 	feeScheduleKeyString := data.Get("feeScheduleKey").(string)
 	feeScheduleKey := hedera.PublicKey{}
@@ -83,7 +79,6 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 		KycKey:           kycKey,
 		FreezeKey:        freezeKey,
 		WipeKey:          wipeKey,
-		SupplyKey:        supplyKey,
 		FeeScheduleKey:   feeScheduleKey,
 		PauseKey:         pauseKey,
 		CustomFees:       nil,
@@ -97,7 +92,7 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 
 	t_svc := service.New(ctx, req.Storage, req.ClientToken)
 
-	tokenID, err := t_svc.CreateToken(tokenCreation, operatorID, adminID, treasuryID)
+	tokenID, err := t_svc.CreateToken(tokenCreation, operatorID, adminID, treasuryID, supplyID)
 	if err != nil {
 		return nil, fmt.Errorf("create token failed: %s", err)
 	}
@@ -114,7 +109,7 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 			"kycKey":           kycKeyString,
 			"freezeKey":        freezeKeyString,
 			"wipeKey":          wipeKeyString,
-			"supplyKey":        supplyKeyString,
+			"supplyID":         supplyID,
 			"feeScheduleKey":   feeScheduleKeyString,
 			"pauseKey":         pauseKeyString,
 			"supplyType":       supplyType,
