@@ -21,6 +21,7 @@ func (tp TokenPaths) Paths() []*framework.Path {
 	return framework.PathAppend(
 		[]*framework.Path{
 			pathToken(),
+			pathTokenMint(),
 		},
 	)
 }
@@ -65,7 +66,7 @@ func pathToken() *framework.Path {
 			"wipeKey": {
 				Type: framework.TypeString,
 			},
-			"supplyKey": {
+			"supplyId": {
 				Type: framework.TypeString,
 			},
 			"feeScheduleKey": {
@@ -101,6 +102,37 @@ func pathToken() *framework.Path {
 			logical.CreateOperation: &framework.PathOperation{
 				Callback: tc.CreateToken,
 			},
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+
+func pathTokenMint() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/mint",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"amount": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"supplyAccountId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorAccountId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.MintToken,
 		},
 
 		ExistenceCheck: handleExistenceCheck,
