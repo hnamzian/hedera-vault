@@ -17,7 +17,7 @@ func NewKeyPaths() *KeyPaths {
 	return &KeyPaths{}
 }
 
-func (kp KeyPaths) Paths() []*framework.Path {
+func (kp *KeyPaths) Paths() []*framework.Path {
 	return framework.PathAppend(
 		[]*framework.Path{
 			pathKeys(),

@@ -46,7 +46,7 @@ func newBackend() (*backend, error) {
 		BackendType: logical.TypeLogical,
 		Paths: framework.PathAppend(
 			kp.NewKeyPaths().Paths(),
-			ap.Paths(),
+			ap.NewAccountPaths().Paths(),
 			tp.NewKeyPaths().Paths(),
 		),
 	}

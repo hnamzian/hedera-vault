@@ -9,7 +9,14 @@ import (
 	"github.com/hnamzian/hedera-vault-plugin/src/account/controller"
 )
 
-func Paths() []*framework.Path {
+type AccountPaths struct {
+}
+
+func NewAccountPaths() *AccountPaths {
+	return &AccountPaths{}
+}
+
+func (ap *AccountPaths) Paths() []*framework.Path {
 	return framework.PathAppend(
 		[]*framework.Path{
 			pathAccounts(),
