@@ -12,7 +12,7 @@ func (t_svc *TokenService) CreateToken(tokenCreation *hc.FTokenCreation, operato
 	if err != nil {
 		return nil, fmt.Errorf("retreive operator account from vault failed: %s", err)
 	}
-	operator_key, _ := t_svc.k_svc.Get(operator_account.KeyID)
+	operator_key, _ := t_svc.k_svc.GetKey(operator_account.KeyID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive operator key from vault failed: %s", err)
 	}
@@ -21,7 +21,7 @@ func (t_svc *TokenService) CreateToken(tokenCreation *hc.FTokenCreation, operato
 	if err != nil {
 		return nil, fmt.Errorf("retreive admin account from vault failed: %s", err)
 	}
-	admin_key, _ := t_svc.k_svc.Get(admin_account.KeyID)
+	admin_key, _ := t_svc.k_svc.GetKey(admin_account.KeyID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive admin key from vault failed: %s", err)
 	}
@@ -30,7 +30,7 @@ func (t_svc *TokenService) CreateToken(tokenCreation *hc.FTokenCreation, operato
 	if err != nil {
 		return nil, fmt.Errorf("retreive treasury account from vault failed: %s", err)
 	}
-	treasury_key, _ := t_svc.k_svc.Get(treasury_account.KeyID)
+	treasury_key, _ := t_svc.k_svc.GetKey(treasury_account.KeyID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive treasury key from vault failed: %s", err)
 	}

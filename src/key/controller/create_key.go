@@ -22,7 +22,7 @@ func Create(ctx context.Context, req *logical.Request, data *framework.FieldData
 	kc := New(ctx, req)
 	key, err := kc.service.Create(id, algo, curve)
 	if err != nil {
-		return nil, fmt.Errorf("create new key failed: %s", err)
+		return nil, err
 	}
 
 	return &logical.Response{

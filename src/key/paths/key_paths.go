@@ -33,7 +33,7 @@ func pathKeys() *framework.Path {
 
 		Fields: map[string]*framework.FieldSchema{
 			"path": {
-				Type:        framework.TypeString,
+				Type: framework.TypeString,
 				Description: "Specifies the path of the secret.",
 			},
 			"id": {
@@ -52,7 +52,7 @@ func pathKeys() *framework.Path {
 				Callback: kc.Create,
 			},
 			logical.ReadOperation: &framework.PathOperation{
-				Callback: kc.Get,
+				Callback: kc.GetKey,
 			},
 			logical.ListOperation: &framework.PathOperation{
 				Callback: kc.List,

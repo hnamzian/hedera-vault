@@ -25,7 +25,7 @@ func New(ctx context.Context, storage logical.Storage, clientToken string) *KeyS
 func (ks *KeyStore) Write(id string, key *key_entity.Key) error {
 	key_buf, err := key.ToBytes()
 	if err != nil {
-		return err
+		return fmt.Errorf("encoding key to bytes failed: %s", err)
 	}
 
 	entry := &logical.StorageEntry{
@@ -34,7 +34,7 @@ func (ks *KeyStore) Write(id string, key *key_entity.Key) error {
 		SealWrap: false,
 	}
 	if err := ks.storage.Put(ks.ctx, entry); err != nil {
-		return err
+		return fmt.Errorf("write key to storage failed: %s", err)
 	}
 	return nil
 }
@@ -42,13 +42,17 @@ func (ks *KeyStore) Write(id string, key *key_entity.Key) error {
 func (ks *KeyStore) Read(id string) (*key_entity.Key, error) {
 	entry, err := ks.storage.Get(ks.ctx, ks.getKey(id))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("fetch key from storage failed: %s", err)
+	}
+
+	if entry == nil {
+		return nil, fmt.Errorf("key not found in storage")
 	}
 
 	key_buf := entry.Value
 	key, err := key_entity.FromBytes(key_buf)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("parsing buffered key failed: %s", err)
 	}
 
 	return key, nil
@@ -57,7 +61,7 @@ func (ks *KeyStore) Read(id string) (*key_entity.Key, error) {
 func (ks *KeyStore) List() ([]string, error) {
 	entries, err := ks.storage.List(ks.ctx, ks.getKey(""))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("fetch keys from storage filed")
 	}
 	return entries, nil
 }

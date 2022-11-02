@@ -10,18 +10,18 @@ import (
 	"github.com/hnamzian/hedera-vault-plugin/src/core/formatters"
 )
 
-func Get(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
+func GetKey(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
 	if req.ClientToken == "" {
 		return nil, fmt.Errorf("client token empty")
 	}
 
 	id := data.Get("id").(string)
-
+	
 	kc := New(ctx, req)
-
-	key, err := kc.service.Get(id)
+	
+	key, err := kc.service.GetKey(id)
 	if err != nil {
-		return nil, fmt.Errorf("Read Key form storage failed: %s", err)
+		return nil, err
 	}
 
 	return &logical.Response{

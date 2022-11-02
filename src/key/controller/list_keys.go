@@ -17,7 +17,7 @@ func List(ctx context.Context, req *logical.Request, data *framework.FieldData) 
 
 	keys, err := kc.service.List()
 	if err != nil {
-		return nil, fmt.Errorf("list key failed: %s", err)
+		return nil, err
 	}
 
 	return logical.ListResponse(keys), err
