@@ -69,7 +69,8 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 		freezeID,
 		kycID,
 		feeScheduleID,
-		supplyID)
+		supplyID,
+		wipeID)
 	if err != nil {
 		return nil, fmt.Errorf("create token failed: %s", err)
 	}
