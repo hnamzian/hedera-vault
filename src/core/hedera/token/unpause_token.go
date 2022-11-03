@@ -6,7 +6,7 @@ import (
 	"github.com/hashgraph/hedera-sdk-go/v2"
 )
 
-func (ht *Token) UnauseToken(tokenIDString, puaseKeyString string) (*hedera.Status, error) {
+func (ht *Token) UnpauseToken(tokenIDString, puaseKeyString string) (*hedera.Status, error) {
 	tokenID, err := hedera.TokenIDFromString(tokenIDString)
 	if err != nil {
 		return nil, fmt.Errorf("invalid tokenID: %s", err)
