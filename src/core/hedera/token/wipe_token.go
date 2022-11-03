@@ -6,7 +6,7 @@ import (
 	"github.com/hashgraph/hedera-sdk-go/v2"
 )
 
-func (ht *Token) WipeToken(tokenIDString, accountIDString, wipeKeyString string) (*hedera.Status, error) {
+func (ht *Token) WipeToken(tokenIDString, accountIDString string, amount uint64, wipeKeyString string) (*hedera.Status, error) {
 	tokenID, err := hedera.TokenIDFromString(tokenIDString)
 	if err != nil {
 		return nil, fmt.Errorf("invalid tokenID: %s", err)
@@ -26,6 +26,7 @@ func (ht *Token) WipeToken(tokenIDString, accountIDString, wipeKeyString string)
 		NewTokenWipeTransaction().
 		SetTokenID(tokenID).
 		SetAccountID(accountID).
+		SetAmount(amount).
 		FreezeWith(ht.client)
 	if err != nil {
 		return nil, fmt.Errorf("prepare transaction failed: %s", err)
