@@ -62,6 +62,9 @@ func (t *Token) CreateFT(tokenCreation *FTokenCreation) (*hedera.TokenID, error)
 	if tokenCreation.PauseKey != (hedera.PublicKey{}) {
 		tokenCreateTransaction = tokenCreateTransaction.SetPauseKey(tokenCreation.PauseKey)
 	}
+	if tokenCreation.WipeKey != (hedera.PublicKey{}) {
+		tokenCreateTransaction = tokenCreateTransaction.SetWipeKey(tokenCreation.WipeKey)
+	}
 	if tokenCreation.MaxSupply != 0 {
 		tokenCreateTransaction = tokenCreateTransaction.
 			SetSupplyType(hedera.TokenSupplyTypeFinite).
