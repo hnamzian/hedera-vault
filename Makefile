@@ -38,6 +38,7 @@ test:
 	vault read hedera/accounts id="1"
 	vault write hedera/accounts id="1" newId="2"
 	vault write hedera/token \
+		type="FT" \
 		operatorId="1" \
 		adminId="1" \
 		treasuryId="1" \

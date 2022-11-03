@@ -18,7 +18,8 @@ func (t_svc *TokenService) CreateToken(
 	kycID,
 	feeScheduleID,
 	supplyID,
-	wipeID string) (*hedera.TokenID, error) {
+	wipeID,
+	autoRenewID string) (*hedera.TokenID, error) {
 	operator_account, err := t_svc.a_svc.GetAccount(operatorID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive operator account from vault failed: %s", err)
@@ -171,11 +172,24 @@ func (t_svc *TokenService) CreateToken(
 		tokenCreation.WipeKey = wipePublicKey
 	}
 
+	if autoRenewID != "" {
+		autoRenew_account, _ := t_svc.a_svc.GetAccount(autoRenewID)
+		if err != nil {
+			return nil, fmt.Errorf("retreive autoRenew account from vault failed: %s", err)
+		}
+		autoRenewAccountID, err := hedera.AccountIDFromString(autoRenew_account.AccountID)
+		if err != nil {
+			return nil, fmt.Errorf("parse autoRenew AccountID failed: %s", err)
+		}
+		tokenCreation.AutoRenewAccount = autoRenewAccountID
+	}
+
 	tokenCreation.AdminPrivateKey = adminPrivateKey
 	tokenCreation.AdminPublicKey = adminPublicKey
 	tokenCreation.TreasuryAccountID = treasuryAccountID
 	tokenCreation.TreasuryPrivateKey = treasuryPrivateKey
 	tokenCreation.TreasuryPublicKey = treasuryPublicKey
+	
 
 	client := hedera_client.
 		NewClient(hedera_client.LocalTestNetClientConfig()).

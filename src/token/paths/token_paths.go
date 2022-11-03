@@ -43,6 +43,10 @@ func pathToken() *framework.Path {
 		Pattern: "token/?",
 
 		Fields: map[string]*framework.FieldSchema{
+			"type": {
+				Type: framework.TypeString,
+				Required: true,
+			},
 			"operatorId": {
 				Type:     framework.TypeString,
 				Required: true,
@@ -102,7 +106,7 @@ func pathToken() *framework.Path {
 			"expirationTime": {
 				Type: framework.TypeString,
 			},
-			"autoRenewAccount": {
+			"autoRenewId": {
 				Type: framework.TypeString,
 			},
 			"memo": {

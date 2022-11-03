@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashgraph/hedera-sdk-go/v2"
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 	ht "github.com/hnamzian/hedera-vault-plugin/src/core/hedera/token"
@@ -17,19 +16,21 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 		return nil, fmt.Errorf("client token empty")
 	}
 
-	operatorID := data.Get("operatorId").(string)
-	adminID := data.Get("adminId").(string)
-	treasuryID := data.Get("treasuryId").(string)
+	tokenType := data.Get("type").(string)
 	name := data.Get("name").(string)
 	symbol := data.Get("symbol").(string)
 	decimals := uint(data.Get("decimals").(int))
 	initSupply := uint(data.Get("initSupply").(int))
+	operatorID := data.Get("operatorId").(string)
+	adminID := data.Get("adminId").(string)
+	treasuryID := data.Get("treasuryId").(string)
 	kycID := data.Get("kycId").(string)
 	freezeID := data.Get("freezeId").(string)
 	wipeID := data.Get("wipeId").(string)
 	supplyID := data.Get("supplyId").(string)
 	feeScheduleID := data.Get("feeScheduleId").(string)
 	pauseID := data.Get("pauseId").(string)
+	autoRenewID := data.Get("autoRenewId").(string)
 
 	// customFees := data.Get("customFees").(string)
 	maxSupply := uint(data.Get("maxSupply").(int))
@@ -39,23 +40,20 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 	expirationTimeString := data.Get("expirationTime").(string)
 	expirationTime, _ := time.Parse("2006-01-02", expirationTimeString)
 
-	autoRenewAccountString := data.Get("autoRenewAccount").(string)
-	autoRenewAccount, _ := hedera.AccountIDFromString(autoRenewAccountString)
-
 	memo := data.Get("memo").(string)
 
 	tokenCreation := &ht.FTokenCreation{
-		Name:             name,
-		Symbol:           symbol,
-		Decimals:         decimals,
-		InitSupply:       initSupply,
-		CustomFees:       nil,
-		MaxSupply:        maxSupply,
-		SupplyType:       supplyType,
-		FreezeDefault:    freezeDefault,
-		ExpirationTime:   expirationTime,
-		AutoRenewAccount: autoRenewAccount,
-		Memo:             memo,
+		Type:           tokenType,
+		Name:           name,
+		Symbol:         symbol,
+		Decimals:       decimals,
+		InitSupply:     initSupply,
+		CustomFees:     nil,
+		MaxSupply:      maxSupply,
+		SupplyType:     supplyType,
+		FreezeDefault:  freezeDefault,
+		ExpirationTime: expirationTime,
+		Memo:           memo,
 	}
 
 	t_svc := service.New(ctx, req.Storage, req.ClientToken)
@@ -70,32 +68,34 @@ func CreateToken(ctx context.Context, req *logical.Request, data *framework.Fiel
 		kycID,
 		feeScheduleID,
 		supplyID,
-		wipeID)
+		wipeID,
+		autoRenewID)
 	if err != nil {
 		return nil, fmt.Errorf("create token failed: %s", err)
 	}
 
 	return &logical.Response{
 		Data: map[string]interface{}{
-			"name":             name,
-			"symbol":           symbol,
-			"decimals":         decimals,
-			"initSupply":       initSupply,
-			"treasuryID":       treasuryID,
-			"adminID":          adminID,
-			"maxSupply":        maxSupply,
-			"kycKey":           kycID,
-			"freezeKey":        freezeID,
-			"wipeKey":          wipeID,
-			"supplyID":         supplyID,
-			"feeScheduleKey":   feeScheduleID,
-			"pauseKey":         pauseID,
-			"supplyType":       supplyType,
-			"freezeDefault":    freezeDefault,
-			"autoRenewAccount": autoRenewAccountString,
-			"expirationTime":   expirationTimeString,
-			"memo":             memo,
-			"tokenID":          tokenID.String(),
+			"type":           tokenType,
+			"name":           name,
+			"symbol":         symbol,
+			"decimals":       decimals,
+			"initSupply":     initSupply,
+			"treasuryID":     treasuryID,
+			"adminID":        adminID,
+			"maxSupplyID":    maxSupply,
+			"kycID":          kycID,
+			"freezeID":       freezeID,
+			"wipeID":         wipeID,
+			"supplyID":       supplyID,
+			"feeScheduleID":  feeScheduleID,
+			"pauseID":        pauseID,
+			"autoRenewID":    autoRenewID,
+			"supplyType":     supplyType,
+			"freezeDefault":  freezeDefault,
+			"expirationTime": expirationTimeString,
+			"memo":           memo,
+			"tokenID":        tokenID.String(),
 		},
 	}, nil
 }

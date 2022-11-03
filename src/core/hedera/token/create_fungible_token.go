@@ -8,6 +8,7 @@ import (
 )
 
 type FTokenCreation struct {
+	Type               string            `json:"type"`
 	Name               string            `json:"name"`
 	Symbol             string            `json:"symbol"`
 	Decimals           uint              `json:"decimal"`
@@ -38,11 +39,20 @@ func (t *Token) CreateFT(tokenCreation *FTokenCreation) (*hedera.TokenID, error)
 		SetTokenSymbol(tokenCreation.Symbol).
 		SetTreasuryAccountID(tokenCreation.TreasuryAccountID)
 
+	if tokenCreation.Type == "FT" {
+		tokenCreateTransaction = tokenCreateTransaction.SetTokenType(hedera.TokenTypeFungibleCommon)
+	} else if tokenCreation.Type == "NFT" {
+		tokenCreateTransaction = tokenCreateTransaction.SetTokenType(hedera.TokenTypeNonFungibleUnique)
+	}
 	if tokenCreation.Decimals > 0 {
 		tokenCreateTransaction = tokenCreateTransaction.SetDecimals(uint(tokenCreation.Decimals))
 	}
 	if tokenCreation.InitSupply > 0 {
-		tokenCreateTransaction = tokenCreateTransaction.SetInitialSupply(uint64(tokenCreation.InitSupply))
+		if tokenCreation.Type == "FT" {
+			tokenCreateTransaction = tokenCreateTransaction.SetInitialSupply(uint64(tokenCreation.InitSupply))
+		} else if tokenCreation.Type == "NFT" {
+			tokenCreateTransaction = tokenCreateTransaction.SetInitialSupply(0)
+		}
 	}
 	if tokenCreation.AdminPublicKey != (hedera.PublicKey{}) {
 		tokenCreateTransaction = tokenCreateTransaction.SetAdminKey(tokenCreation.AdminPublicKey)
