@@ -17,7 +17,8 @@ func (t_svc *TokenService) CreateToken(
 	freezeID,
 	kycID,
 	feeScheduleID,
-	supplyID string) (*hedera.TokenID, error) {
+	supplyID,
+	wipeID string) (*hedera.TokenID, error) {
 	operator_account, err := t_svc.a_svc.GetAccount(operatorID)
 	if err != nil {
 		return nil, fmt.Errorf("retreive operator account from vault failed: %s", err)
@@ -152,6 +153,22 @@ func (t_svc *TokenService) CreateToken(
 			return nil, fmt.Errorf("parse supply public key failed: %s", err)
 		}
 		tokenCreation.SupplyKey = supplyPublicKey
+	}
+
+	if wipeID != "" {
+		wipe_account, _ := t_svc.a_svc.GetAccount(wipeID)
+		if err != nil {
+			return nil, fmt.Errorf("retreive wipe account from vault failed: %s", err)
+		}
+		wipe_key, _ := t_svc.k_svc.GetKey(wipe_account.KeyID)
+		if err != nil {
+			return nil, fmt.Errorf("retreive wipe key from vault failed: %s", err)
+		}
+		wipePublicKey, _ := hedera.PublicKeyFromString(wipe_key.Publickey)
+		if err != nil {
+			return nil, fmt.Errorf("parse wipe public key failed: %s", err)
+		}
+		tokenCreation.WipeKey = wipePublicKey
 	}
 
 	tokenCreation.AdminPrivateKey = adminPrivateKey
