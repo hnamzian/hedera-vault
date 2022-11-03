@@ -21,7 +21,19 @@ func (tp TokenPaths) Paths() []*framework.Path {
 	return framework.PathAppend(
 		[]*framework.Path{
 			pathToken(),
+			
 			pathTokenMint(),
+			pathTokenBurn(),
+			pathTokenDelete(),
+			pathTokenAssociate(),
+			pathTokenDissociate(),
+			pathTokenFreeze(),
+			pathTokenUnfreeze(),
+			pathTokenGrantKyc(),
+			pathTokenRevokeKyc(),
+			pathTokenPause(),
+			pathTokenUnpause(),
+			pathTokenWipe(),
 		},
 	)
 }
@@ -121,11 +133,11 @@ func pathTokenMint() *framework.Path {
 				Type: framework.TypeString,
 				Required: true,
 			},
-			"supplyAccountId": {
+			"supplyId": {
 				Type: framework.TypeString,
 				Required: true,
 			},
-			"operatorAccountId": {
+			"operatorId": {
 				Type: framework.TypeString,
 				Required: true,
 			},
@@ -133,6 +145,334 @@ func pathTokenMint() *framework.Path {
 
 		Callbacks: map[logical.Operation]framework.OperationFunc{
 			logical.CreateOperation: tc.MintToken,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+func pathTokenBurn() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/burn",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"amount": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"supplyId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.BurnToken,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+
+func pathTokenDelete() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/delete",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"adminId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.DeleteToken,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+
+func pathTokenAssociate() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/associate",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"userId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.AssociateWithToken,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+func pathTokenDissociate() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/dissociate",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"userId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.DissociateWithToken,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+
+func pathTokenFreeze() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/freeze",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"userId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"kycId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.FreezeAccount,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+func pathTokenUnfreeze() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/unfreeze",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"userId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"kycId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.UnfreezeAccount,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+
+func pathTokenGrantKyc() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/grant_kyc",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"userId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"kycId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.GrantKyc,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+func pathTokenRevokeKyc() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/revoke_kyc",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"userId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"kycId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.RevokeKyc,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+
+func pathTokenPause() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/pause",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"amount": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"pauseId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.PauseToken,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+func pathTokenUnpause() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/unpause",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"amount": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"pauseId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.UnpauseToken,
+		},
+
+		ExistenceCheck: handleExistenceCheck,
+	}
+}
+
+func pathTokenWipe() *framework.Path {
+	return &framework.Path{
+		Pattern: "tokens/wipe",
+
+		Fields: map[string]*framework.FieldSchema{
+			"tokenId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"userId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"amount": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"wipeId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+			"operatorId": {
+				Type: framework.TypeString,
+				Required: true,
+			},
+		},
+
+		Callbacks: map[logical.Operation]framework.OperationFunc{
+			logical.CreateOperation: tc.WipeToken,
 		},
 
 		ExistenceCheck: handleExistenceCheck,

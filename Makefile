@@ -42,11 +42,27 @@ test:
 		adminId="1" \
 		treasuryId="1" \
 		supplyId="1" \
+		kycId="1" \
+		freezeId="1" \
+		pauseId="1" \
+		wipeId="1" \
 		name="test" \
 		symbol="tst" \
 		decimal="3" \
 		initSupply=100000 \
 		maxSupply=10000000 
+	vault write hedera/tokens/pause tokenId="0.0.1168" pauseId="1" operatorId="1"
+	vault write hedera/tokens/unpause tokenId="0.0.1168" pauseId="1" operatorId="1"
+	vault write hedera/tokens/mint  tokenId="0.0.1168" supplyId="1" amount="10" operatorId="1"
+	vault write hedera/tokens/burn  tokenId="0.0.1168" supplyId="1" amount="10" operatorId="1"
+	vault write hedera/tokens/associate  tokenId="0.0.1168" userId="2" operatorId="1"
+	vault write hedera/tokens/wipe  tokenId="0.0.1168" userId="2" amount="10" wipeId="1" operatorId="1"
+	vault write hedera/tokens/grant_kyc  tokenId="0.0.1168" userId="2" kycId="1" operatorId="1"
+	vault write hedera/tokens/revoke_kyc  tokenId="0.0.1168" userId="2" kycId="1" operatorId="1"
+	vault write hedera/tokens/freeze  tokenId="0.0.1168" userId="2" kycId="1" operatorId="1"
+	vault write hedera/tokens/unfreeze  tokenId="0.0.1168" userId="2" kycId="1" operatorId="1"
+	vault write hedera/tokens/dissociate  tokenId="0.0.1168" userId="2" operatorId="1"
+	vault write hedera/tokens/delete tokenId="0.0.1168" adminId=1 operatorId=1
 
 fmt:
 	go fmt $$(go list ./...)
